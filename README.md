@@ -1,8 +1,9 @@
 # AWS/EC2/CentOS6 EBSが8GBしか認識しない（[参考](http://ysh.hateblo.jp/entry/2016/04/08/011349)）
 
 ## さまりー
-- 本問題の原因は、cloud-init が正常に動作していないこと。
-- cloud-utils-growpartをインストール、手動でgrowpartを実行し、問題を解決する。
+- 本事象は、AWSにおいてCentOS6のリポジトリからインスタンスを作成した場合、EBSが8GBまでしか認識しないというものである。
+- 原因は、cloud-init が正常に動作していないことにある。
+- 解決策として、cloud-utils-growpartをインストールし、ボリュームに対し手動でgrowpartを実行する。
 
 ####  1. 『ファイルシステムが認識しているボリュームサイズ(8GB)』を確認する。
 
@@ -12,7 +13,7 @@
 
     yum -y install parted
 
-####  3. 『実際のボリュームサイズ(100GB)』と『パーティションサイズ(8GB)』を確認する。
+####  3. 『実際のボリュームサイズ(100GB)』と『パーティションサイズ(8GB)』が異なることを確認する。
 
     parted -l
 
@@ -39,7 +40,7 @@
 
     growpart /dev/xvda 1
 
-    #| 『growpart ディスク 番号』
+    #| **** 『growpart ディスク 番号』について ****
     #| # parted -l
     #| Model: Xen Virtual Block Device (xvd)
     #| Disk /dev/xvda: 107GB
@@ -62,3 +63,10 @@
 #### 10. 再起動を実施。
 
     reboot
+
+#### 11. 『ファイルシステムが認識しているボリュームサイズ(100GB)』を確認する。
+
+    df -hP
+
+
+
