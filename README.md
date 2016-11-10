@@ -25,8 +25,8 @@
 
 ####  4. 『cloud-init』要件として、『epel』リポジトリをインストール（デフォルトで無効）する。
 
-    yum -y install https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
     yum -y install yum-utils
+    yum -y install https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
     yum-config-manager --disable epel*
 
 ####  5. 『cloud-init』および『growpart』コマンドをインストールする。
