@@ -1,14 +1,14 @@
 # AWS/EC2/CentOS6 EBSが8GBしか認識しない（[参考](http://ysh.hateblo.jp/entry/2016/04/08/011349)）
 
-## さまりー
-- 本事象は、AWSにおいてCentOS6のリポジトリからインスタンスを作成した場合、EBSが8GBまでしか認識しないというものである。
-- 原因は、cloud-init が正常に動作していないことにある。
-- 解決策として、cloud-utils-growpartをインストールし、ボリュームに対し手動でgrowpartを実行する。
+## Summary
+- 本事象は、AWSにおいて「AMI【CentOS Linux 6 x86_64 HVM EBS 1602】からEC2インスタンスを作成した場合、EBSが8GBまでしか認識しない」というものである。
+- 原因は、【cloud-init】パッケージのボリューム管理の機能が正常に動作していないことにある。
+- 解決策として、【cloud-utils-growpart】をインストールし、ルートボリュームに対し手動で【growpart】コマンドを実行する。
 
-## 前提
-- rootユーザであること。
+## Prerequisite
+- 【root】ユーザであること。
 - 再起動が必要になるため、作業実施の周知が事前に行われていること。
-- 事前にスナップショットを取得していること。
+- 事前にバックアップを取得していること。
 
 ## 以下、手順。
 
@@ -18,7 +18,7 @@
 
     df -hP
 
-####  2. 『parted』をインストールする。
+####  2. 【parted】をインストールする。
 
     yum -y install parted
 
@@ -26,18 +26,18 @@
 
     parted -l
 
-####  4. 『cloud-init』要件として、『epel』リポジトリをインストール（デフォルトで無効）する。
+####  4. 【cloud-init】要件として、【epel】リポジトリをインストール（デフォルトで無効）する。
 
     yum -y install yum-utils
     yum -y install https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
     yum-config-manager --disable epel*
 
-####  5. 『cloud-init』および『growpart』コマンドをインストールする。
+####  5. 【cloud-init】および【growpart】コマンドをインストールする。
 
     yum --enablerepo=epel -y install cloud-init
     yum --enablerepo=epel -y install cloud-utils-growpart
 
-####  6. 『growpart』コマンド要件として、ロケールが『en_US.UTF-8』でない場合は変更する。
+####  6. 【growpart】コマンド要件として、ロケールを【en_US.UTF-8】に変更する。
 
     locale
 
@@ -45,7 +45,7 @@
     export LANG="en_US.UTF-8"
     locale
 
-####  7. 『growpart』コマンドを実行し、ボリュームを正常に認識させる。
+####  7. 【growpart】コマンドを実行し、ボリュームを正常に認識させる。
 
     growpart /dev/xvda 1
 
