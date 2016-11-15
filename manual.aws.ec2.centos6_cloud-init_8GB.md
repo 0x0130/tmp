@@ -1,7 +1,7 @@
 # AWS/EC2/CentOS6 EBSが8GBしか認識しない（[参考](http://ysh.hateblo.jp/entry/2016/04/08/011349)）
 
 ## Summary
-- 本事象は、AWSにおいて「AMI【CentOS Linux 6 x86_64 HVM EBS 1602】からEC2インスタンスを作成した場合、EBSが8GBまでしか認識しない」というものである。
+- 本事象は、AWSにおいて「AMI【CentOS Linux 6 x86_64 HVM EBS 1602】からEC2インスタンスを作成した場合、EBSを8GBまでしか認識しない」というものである。
 - 原因は、【cloud-init】パッケージのボリューム管理の機能が正常に動作していないことにある。
 - 解決策として、【cloud-utils-growpart】をインストールし、ルートボリュームに対し手動で【growpart】コマンドを実行する。
 
